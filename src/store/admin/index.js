@@ -8,10 +8,11 @@ const state = {
 const actions = {
     async getAllUsers({ commit, dispatch }){
         return await Vue.axios.get(Api.GET_All_USERS).then(response => {
+            console.log(response, 'response22222222222222222')
             commit('setUsers', response)
 
         }).catch(error => {
-
+            console.log(error, 'error22222222222222222')
         })
     },
     async createUser({ commit, dispatch }, body){

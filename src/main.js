@@ -34,7 +34,6 @@ Vue.axios.defaults.baseURL = 'http://193.176.79.41';
 //   return Promise.reject(error);
 // });
 
-
 Vue.axios.interceptors.response.use(function (response) {
 
   Vue.notify({
@@ -58,15 +57,22 @@ Vue.axios.interceptors.response.use(function (response) {
     duration: 1000000
   });
 
+//&& error.response.config.url !== Api.AUTH && error.response.config.url !== Api.TOKEN_VERIFY
   if(error.response.status === 401 && error.response.config.url !== Api.TOKEN_VERIFY){
-    await store.dispatch('auth/tokenVerify').then(async res => {
-      if(!res) await store.dispatch('auth/getTokenByRefresh').then(res => {
-        error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+    return await store.dispatch('auth/tokenVerify').then(async tokenVerifyIsValid => {
+      if(!tokenVerifyIsValid) return await store.dispatch('auth/getTokenByRefresh').then(async refreshTokenSuccess => {
+        if(refreshTokenSuccess) {
+          error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+          return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
+        }
       })
-      else error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+      else {
+        error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+        return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
+      }
     })
 
-    return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
+    //return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
   } else {
     return Promise.reject(error);
   }

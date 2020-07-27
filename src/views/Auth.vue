@@ -143,12 +143,17 @@
                     email: this.email,
                     password: this.password,
                 }).then(response => {
+                    console.log(response, 'response')
                     this.loading = false;
                     this.$refs.form.reset();
 
                     this.$router.push({
                         name: 'Home'
                     })
+                }).catch(error => {
+                    console.log(error, 'error')
+                    this.loading = false;
+                    this.valid = true;
                 })
             }
         },

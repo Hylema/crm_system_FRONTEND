@@ -9,14 +9,14 @@ const state = {
 const actions = {
     async login ({ commit, dispatch }, params){
         return await Vue.axios.post(Api.AUTH, params).then(response => {
+            console.log(response, 'response1')
             commit('login', response);
             commit('setToken');
-        }).catch(error => {
-
         })
     },
     logout({ commit }){
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
 
         // Vue.notify({
         //     group: 'Api',
@@ -45,8 +45,12 @@ const actions = {
         }).then(response => {
             commit('login', response);
             commit('setToken');
+
+            return true;
         }).catch(error => {
              commit('logout');
+
+            return false
         })
     },
 };
