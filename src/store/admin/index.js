@@ -6,101 +6,32 @@ const state = {
 };
 
 const actions = {
-    async getAllUsers({ commit }){
+    async getAllUsers({ commit, dispatch }){
         return await Vue.axios.get(Api.GET_All_USERS).then(response => {
-            Vue.notify({
-                group: 'Api',
-                title: '200',
-                text: 'Все пользователи успешно получены',
-                type: 'success',
-                duration: 10000
-            });
-
             commit('setUsers', response)
 
-            console.log(response, 'response');
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: '401',
-                text: 'Не удалось получить пользователей',
-                type: 'error',
-                duration: 10000
-            });
+
         })
     },
-    async createUser({ commit }, body){
+    async createUser({ commit, dispatch }, body){
         return await Vue.axios.post(Api.CREATE_USER, body).then(response => {
-            Vue.notify({
-                group: 'Api',
-                title: response.status,
-                text: 'Пользователь успешно создан',
-                type: 'success',
-                duration: 10000
-            });
-            console.log(response, 'response');
-
             return true;
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: `${error.response.status}`,
-                text: 'Не удалось создать ползователя',
-                type: 'error',
-                duration: 10000
-            });
-
             return false;
         })
     },
-    async updateUser({ commit }, params){
-
+    async updateUser({ commit, dispatch }, params){
         return await Vue.axios.put(`${Api.UPDATE_USER}${params.id}`, params.data).then(response => {
-            Vue.notify({
-                group: 'Api',
-                title: response.status,
-                text: 'Пользователь успешно обновлен',
-                type: 'success',
-                duration: 10000
-            });
-
-            console.log(response, 'response');
-
             return true;
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: `${error.response.status}`,
-                text: 'Не удалось обновить ползователя',
-                type: 'error',
-                duration: 10000
-            });
-
             return false;
         })
     },
-    async deleteUser({ commit }, id){
+    async deleteUser({ commit, dispatch }, id){
         await Vue.axios.delete(`${Api.DELETE_USER}${id}`).then(response => {
-            Vue.notify({
-                group: 'Api',
-                title: response.status,
-                text: 'Пользователь успешно удален',
-                type: 'success',
-                duration: 10000
-            });
-
-            console.log(response, 'response');
-
             return true;
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: `${error.response.status}`,
-                text: 'Не удалось удалить ползователя',
-                type: 'error',
-                duration: 10000
-            });
-
             return false;
         })
     },

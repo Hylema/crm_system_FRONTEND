@@ -7,109 +7,46 @@ const state = {
 };
 
 const actions = {
-    async login ({ commit }, params){
+    async login ({ commit, dispatch }, params){
         return await Vue.axios.post(Api.AUTH, params).then(response => {
-
-            Vue.notify({
-                group: 'Api',
-                title: '200',
-                text: 'Авторизация прошла успешно',
-                type: 'success',
-                duration: 10000
-            });
-
             commit('login', response);
             commit('setToken');
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: '401',
-                text: 'Происходит втирание',
-                type: 'error',
-                duration: 10000
-            });
+
         })
-        // return new Promise((resolve, reject) => {
-        //     timeout(3000).then(() => {
-        //         localStorage.setItem('access_token', 'params');
-        //         Vue.notify({
-        //             group: 'Api',
-        //             title: '200',
-        //             text: 'Авторизация прошла успешно',
-        //             type: 'success',
-        //             duration: 1000000
-        //         });
-        //         commit('login', 'params');
-        //         resolve('params')
-        //     })
-        // });
     },
     logout({ commit }){
         localStorage.removeItem('access_token');
 
-        Vue.notify({
-            group: 'Api',
-            title: '200',
-            text: 'Вы успешно вышли',
-            type: 'success',
-            duration: 1000000
-        });
+        // Vue.notify({
+        //     group: 'Api',
+        //     title: `${response.status}`,
+        //     text: 'Вы успешно вышли',
+        //     type: 'success',
+        //     duration: 1000000
+        // });
 
         commit('logout');
     },
-    async tokenVerify({ commit }) {
+    async tokenVerify({ commit, dispatch }) {
         return await Vue.axios.post(Api.TOKEN_VERIFY, {
             token: state.token
         }).then(response => {
-
-            Vue.notify({
-                group: 'Api',
-                title: '200',
-                text: 'Проверка токена прошла успешно',
-                type: 'success',
-                duration: 10000
-            });
-
             commit('setToken');
 
             return true;
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: '400',
-                text: 'Проверка токена не прошла',
-                type: 'error',
-                duration: 10000
-            });
-
             return false;
         })
     },
-    async getTokenByRefresh({ commit }) {
+    async getTokenByRefresh({ commit, dispatch }) {
         return await Vue.axios.post(Api.REFRESH_TOKEN, {
             refresh: state.refresh
         }).then(response => {
-
-            Vue.notify({
-                group: 'Api',
-                title: '200',
-                text: 'Замена токена прошел успешно',
-                type: 'success',
-                duration: 10000
-            });
-
             commit('login', response);
             commit('setToken');
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: '400',
-                text: error,
-                type: 'error',
-                duration: 10000
-            });
-
-            // commit('logout');
+             commit('logout');
         })
     },
 };

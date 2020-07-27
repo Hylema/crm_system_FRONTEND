@@ -46,7 +46,7 @@ const state = {
         {
           title: 'Пользователи',
           name: 'users',
-          icon: 'mdi-person',
+          icon: 'mdi-account',
           route: '',
         },
       ]

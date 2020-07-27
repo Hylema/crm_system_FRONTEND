@@ -5,7 +5,8 @@ const state = {
 };
 
 const actions = {
-    setTheme({ commit }, value){
+    setTheme({ commit, rootState }, value){
+        console.log(rootState, 'rootState')
         localStorage.setItem('dark_theme', value);
         commit('changeTheme', value);
     },

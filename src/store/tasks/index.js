@@ -7,27 +7,23 @@ const state = {
 };
 
 const actions = {
-    async getAllTasks({ commit }){
+    async getAllTasks({ commit, dispatch }){
         return await Vue.axios.get(Api.GET_ALL_TASKS).then(response => {
-            Vue.notify({
-                group: 'Api',
-                title: '200',
+            dispatch('notification/createNotification', {
+                api: Api.GET_ALL_TASKS,
+                params: {},
+                response: response,
                 text: 'Все задачи успешно получены',
-                type: 'success',
-                duration: 10000
-            });
+            }, { root: true })
 
             commit('setTasks', response);
-
-            console.log(response, 'response');
         }).catch(error => {
-            Vue.notify({
-                group: 'Api',
-                title: '401',
-                text: error,
-                type: 'error',
-                duration: 10000
-            });
+            dispatch('notification/createNotification', {
+                api: Api.GET_ALL_TASKS,
+                params: {},
+                response: error.response,
+                text: 'Не удалось получить все задачи',
+            }, { root: true })
         })
     },
 };

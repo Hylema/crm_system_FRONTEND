@@ -1,6 +1,7 @@
 <template>
     <v-dialog
             v-model="task_dialog"
+            :fullscreen="window.width<=600"
             width="800"
     >
         <v-card color="background">
@@ -9,8 +10,8 @@
                 <v-card-title><v-btn class="mx-2" fab dark small color="action" @click="task_dialog = false"><v-icon>close</v-icon></v-btn></v-card-title>
             </v-layout>
 
-            <v-layout justify-space-around class="p-2">
-                <v-flex md7>
+            <v-layout justify-space-around wrap class="p-2">
+                <v-flex sm12 md5>
                     <v-card-text>
                         Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
                     </v-card-text>
@@ -23,13 +24,12 @@
 
                     <v-card-text>
                         <v-text-field
-                                style="padding-right: 20px;"
                                 label="Добавить комментарий"
                                 outlined
                         ></v-text-field>
                     </v-card-text>
                 </v-flex>
-                <v-flex md5>
+                <v-flex sm12 md7>
                     <h4>Статус</h4>
                     <v-overflow-btn
                             class="my-2"
@@ -78,8 +78,10 @@
 </template>
 
 <script>
+    import windowSize from '../../mixins/windowSize'
     export default {
         name: "task_dialog",
+        mixins: [windowSize],
         data(){
             return {
                 dropdown_font: ['Новая задача', 'Принята к выполнению', 'Выполнена'],

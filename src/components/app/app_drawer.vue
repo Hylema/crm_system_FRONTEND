@@ -5,8 +5,11 @@
             app
             :mini-variant="mini_variant"
     >
-        <v-list style="padding: 0" v-if="!mini_variant">
-            <v-list-item color="action">
+        <v-list style="padding: 0" >
+            <v-list-item
+                    color="action"
+                    @click.stop="themeIsDark = !themeIsDark"
+            >
                 <v-list-item-action>
                     <v-icon>{{ 'mdi-weather-sunny'}}</v-icon>
                 </v-list-item-action>
@@ -19,6 +22,7 @@
                         color="action"
                         flat
                         inset
+                        disabled
                 ></v-switch>
 
                 <v-list-item-action>
@@ -27,14 +31,57 @@
             </v-list-item>
         </v-list>
 
-        <v-list-item v-else>
-            <v-list-item-action>
-                <v-icon @click.stop="themeIsDark = !themeIsDark">mdi-brightness-6</v-icon>
-            </v-list-item-action>
+
+
+
+        <v-list-item class="px-2">
+            <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-title>John Leider</v-list-item-title>
         </v-list-item>
 
-        <v-list v-for="tab in tabs" style="padding: 0" outlined>
-            <v-list-item link :to="tab.route" color="action">
+
+
+
+
+        <v-list style="padding: 0" v-if="window.width < 1262">
+            <v-list-item link :to="tab.route" color="action" v-for="tab in tabs" v-if="!tab.children">
+                <v-list-item-action>
+                    <v-icon>{{ tab.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>{{ tab.title }}</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <v-list-group
+                    v-else
+                    no-action
+                    :prepend-icon="tab.icon"
+            >
+                <template v-slot:activator>
+                    <v-list-item-title>{{ tab.title }}</v-list-item-title>
+                </template>
+
+                <v-list-item
+                        v-for="(item, index) in tab.children"
+                        color="action"
+                        :to="{name: item.name}"
+                        exact
+                        link
+                >
+                    <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list-group>
+        </v-list>
+
+        <v-list style="padding: 0" v-else>
+            <v-list-item link :to="tab.route" color="action" v-for="tab in tabs">
                 <v-list-item-action>
                     <v-icon>{{ tab.icon }}</v-icon>
                 </v-list-item-action>
@@ -44,7 +91,10 @@
             </v-list-item>
         </v-list>
 
-        <v-list style="padding: 0; position: absolute; bottom: 0; width: 100%">
+
+
+
+        <v-list style="padding: 0; position: absolute; bottom: 0; width: 100%" v-if="window.width > 1262">
             <v-list-item @click="mini_variant = !mini_variant">
                 <v-list-item-action>
                     <v-icon>{{ !mini_variant ? 'mdi-arrow-collapse-horizontal' : 'mdi-arrow-expand-horizontal' }}</v-icon>
@@ -54,12 +104,25 @@
                 </v-list-item-content>
             </v-list-item>
         </v-list>
+
+        <v-list style="padding: 0; position: absolute; bottom: 0; width: 100%" v-else>
+            <v-list-item @click="drawer = false">
+                <v-list-item-action>
+                    <v-icon>mdi-close</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>Закрыть</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
     </v-navigation-drawer>
 </template>
 
 <script>
+    import windowSize from '../../mixins/windowSize'
     export default {
         name: "app_drawer",
+        mixins: [windowSize],
         data(){
           return {
               mini_variant: false,
@@ -71,9 +134,7 @@
                     return this.$store.getters['header/drawer'];
                 },
                 set (value) {
-                    // this.$store.commit('header/drawer', {
-                    //     value: value
-                    // })
+                    this.$store.commit('header/drawer', value)
                 }
             },
             tabs: vm => vm.$store.getters['header/tabs'],

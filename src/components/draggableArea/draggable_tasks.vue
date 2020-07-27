@@ -1,34 +1,36 @@
 <template>
-    <v-card class="background overflow-hidden card-width" v-bind:style="window.width < 1485 && 1260 < window.width ? {height: 'calc(100vh - 135px)'} : 1265 > window.width ? 550 > window.width ? {height: '100%'} : {height: 'calc(100vh - 65px)'} : {height: 'calc(100vh - 115px)'}">
+    <v-card class="background overflow-hidden card-width" v-bind:style="window.width < 1485 && 1260 < window.width ? {height: 'calc(100vh - 85px)'} : 1265 > window.width ? 550 > window.width ? {height: '100%'} : {height: 'calc(100vh - 65px)'} : {height: 'calc(100vh - 70px)'}">
 <!--        <v-img-->
 <!--                class="white&#45;&#45;text align-end"-->
 <!--                height="100px"-->
 <!--                src="https://www.ejin.ru/wp-content/uploads/2019/05/gora-22.jpg"-->
 <!--        ></v-img>-->
         <v-card-title>
-            <v-tooltip bottom open-delay="500">
-                <template v-slot:activator="{ on }">
-                    <v-btn class="mx-2" fab dark small color="action" v-on="on">
-                        {{ listLength }}
-                    </v-btn>
-                </template>
-                <span>Кол-во задач в этом разделе</span>
-            </v-tooltip>
-            {{ titlee }}
+            <v-layout row justify-start>
+                <v-tooltip bottom open-delay="500">
+                    <template v-slot:activator="{ on }">
+                        <v-btn class="mx-2" fab dark small color="action" v-on="on">
+                            {{ listLength }}
+                        </v-btn>
+                    </template>
+                    <span>Кол-во задач в этом разделе</span>
+                </v-tooltip>
+                <div style="overflow: hidden">{{ title }}</div>
+            </v-layout>
         </v-card-title>
         <v-card-text style="overflow-y: auto">
             <draggable
                     :disabled="window.width < 800"
                     ghost-class="ghost"
-                    v-bind:style="window.width > 550 ? {height: '85vh'} : {height: '100%'}"
+                    v-bind:style="window.width > 550 ? {height: 'calc(100vh - 85px)'} : {height: '100%'}"
                     class="list-group"
-                    v-model="listt"
-                    v-bind="dragOptionss"
+                    v-model="list"
+                    v-bind="dragOptions"
                     @start="drag = true"
                     @end="drag = false"
             >
                 <div
-                        v-for="element in listt"
+                        v-for="element in list"
                         :key="element.order"
                         style="padding: 10px 0;"
                 >
@@ -89,13 +91,10 @@
         data() {
             return {
                 drag: false,
-                titlee: this.title || '',
-                dragOptionss: this.dragOptions || {},
-                listt: this.list || [],
             }
         },
         computed: {
-            listLength: vm => vm.listt.length,
+            listLength: vm => vm.list.length,
             task_dialog: {
                 get(){
                     return this.$store.getters["tasks/task_dialog"];

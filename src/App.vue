@@ -41,14 +41,14 @@
             app_drawer
         },
         mounted() {
-            if(!this.userIsAuth){
-                this.$store.dispatch('auth/tokenVerify').then(res => {
-                    if(!res){
-                        this.$store.dispatch('auth/getTokenByRefresh')
-                    }
-                })
-
-            }
+            // if(!this.userIsAuth){
+            //     this.$store.dispatch('auth/tokenVerify').then(res => {
+            //         if(!res){
+            //             this.$store.dispatch('auth/getTokenByRefresh')
+            //         }
+            //     })
+            //
+            // }
         },
         data() {
             return {
@@ -104,6 +104,13 @@
     input:-webkit-autofill {
         -webkit-text-fill-color: white !important;
         transition: background-color 5000s ease-in-out 0s;
+    }
+
+    button:active {
+        outline: none !important;
+    }
+    button {
+        outline: none !important;
     }
 </style>
 

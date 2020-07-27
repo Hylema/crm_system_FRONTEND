@@ -6,6 +6,7 @@ import auth from './auth'
 import theme from './theme'
 import tasks from './tasks'
 import admin from './admin'
+import notification from './notification'
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     auth,
     theme,
     tasks,
-    admin
+    admin,
+    notification
   },
   strict: false
 })

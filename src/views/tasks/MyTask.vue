@@ -2,32 +2,37 @@
     <div>
         <div style="overflow-x: auto; display: flex; height: 100%; -webkit-overflow-scrolling: touch;" v-if="window.width > 550">
             <draggable_area
+                    v-for="task in tasks"
                     class="ml-2 mt-2 mb-2"
-                    :list="list"
+                    :list="task.list"
                     :dragOptions="dragOptions"
-                    :title="'Новая задача'"
-            ></draggable_area>
-
-            <draggable_area
-                    class="ml-2 mt-2 mb-2"
-                    :list="[]"
-                    :dragOptions="dragOptions"
-                    :title="'Принята к выполнению'"
-            ></draggable_area>
-
-            <draggable_area
-                    class="ml-2 mt-2 mb-2"
-                    :list="[]"
-                    :dragOptions="dragOptions"
-                    :title="'Выполнена'"
+                    :title="task.title"
             ></draggable_area>
         </div>
         <div v-else>
+            <v-slide-group multiple show-arrows style="padding-top: 10px;">
+                <v-slide-item
+                        v-for="(task, index) in tasks"
+                        :key="task.title"
+                        v-slot:default="{ active, toggle }"
+                >
+                    <v-btn
+                            small
+                            class="mx-2"
+                            active-class="purple white--text"
+                            depressed
+                            rounded
+                            @click="showTask(index)"
+                    >
+                        {{ task.title }}
+                    </v-btn>
+                </v-slide-item>
+            </v-slide-group>
             <draggable_area
                     class="ml-2 mt-2 mb-2"
-                    :list="list"
+                    :list="enterTask.list"
                     :dragOptions="dragOptions"
-                    :title="'Новая задача'"
+                    :title="enterTask.title"
             ></draggable_area>
         </div>
 
@@ -68,17 +73,39 @@
             task_dialog
         },
         mixins: [windowSize],
+        mounted() {
+          this.enterTask = this.tasks[0]
+        },
         data() {
             return {
-                list: message.map((name, index) => {
-                    return { name, order: index + 1 };
-                }),
+                tasks: [
+                    {
+                        title: 'Новая задача',
+                        list: message.map((name, index) => {
+                            return { name, order: index + 1 };
+                        }),
+                    },
+                    {
+                        title: 'Принята к выполнению',
+                        list: [],
+                    },
+                    {
+                        title: 'Выполнена',
+                        list: [],
+                    },
+                ],
+                enterTask: {},
                 drag: false
             };
         },
         methods: {
             sort() {
                 this.list = this.list.sort((a, b) => a.order - b.order);
+            },
+            showTask(index) {
+                console.log(index)
+                this.enterTask = this.tasks[index]
+                console.log(this.enterTask);
             }
         },
         computed: {
