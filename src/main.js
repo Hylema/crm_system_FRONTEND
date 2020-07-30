@@ -67,8 +67,10 @@ Vue.axios.interceptors.response.use(function (response) {
         }
       })
       else {
-        error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
-        return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
+        if(!error.response.config.headers['Authorization']){
+          error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+          return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
+        }
       }
     })
 
