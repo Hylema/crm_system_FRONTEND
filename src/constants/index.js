@@ -35,12 +35,17 @@ export const RouteNames = {
 const HOST = "http://193.176.79.41/"
 
 export const Api = {
-  AUTH: "auth/token/",
-  TOKEN_VERIFY: '/auth/token/verify/',
-  REFRESH_TOKEN: '/auth/token/refresh/',
-  GET_All_USERS: '/auth/users/',
-  CREATE_USER: '/auth/users/create/',
-  UPDATE_USER: '/auth/users/',
-  DELETE_USER: '/auth/users/',
-  GET_ALL_TASKS: 'crmsys/v1/alltasks/'
+  AUTH: "auth/user/login/",
+  TOKEN_VERIFY: '/auth/user/token/verify/',
+  REFRESH_TOKEN: '/auth/user/token/refresh/',
+
+  GET_All_USERS: '/auth/user/list',
+  CREATE_USER: '/auth/user/create/',
+  UPDATE_USER: '/auth/user/change/',
+  DELETE_USER: '/auth/user/change/',
+
+  GET_ALL_TASKS: '/tasks/alltasks/',
+  GET_TASK_DETAILS: '/tasks/detail',
+  MAKE_TASK_COMMENT: '/tasks/comments/',
+  CREATE_TASK: '/tasks/maketask/'
 };

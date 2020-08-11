@@ -30,7 +30,7 @@ const actions = {
         })
     },
     async deleteUser({ commit, dispatch }, id){
-        await Vue.axios.delete(`${Api.DELETE_USER}${id}`).then(response => {
+        return await Vue.axios.delete(`${Api.DELETE_USER}${id}`).then(response => {
             return true;
         }).catch(error => {
             return false;

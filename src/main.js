@@ -34,6 +34,16 @@ Vue.axios.defaults.baseURL = 'http://193.176.79.41';
 //   return Promise.reject(error);
 // });
 
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+
+Vue.filter('reverse', function(value) {
+  return value.slice().reverse();
+});
+
 Vue.axios.interceptors.response.use(function (response) {
 
   Vue.notify({
@@ -85,11 +95,14 @@ function  getSuccessTitle(url) {
     case Api.AUTH: return 'Авторизация прошла успешно';
     case Api.TOKEN_VERIFY: return 'Проверка токена прошла успешно';
     case Api.REFRESH_TOKEN: return 'Замена токена прошел успешно';
+
     case Api.GET_All_USERS: return 'Пользователи успешно получены';
     case Api.CREATE_USER: return 'Пользователь успешно создан';
     case Api.UPDATE_USER: return 'Пользователь успешно обновлен';
     case Api.DELETE_USER: return 'Пользователь успешно удален';
+
     case Api.GET_ALL_TASKS: return 'Все задачи успешно получены';
+    case Api.GET_TASK_DETAILS: return 'Детали такска успешно получены'
     default: return 'Неизвестное успешное действие';
   }
 }
@@ -99,11 +112,14 @@ function  getErrorTitle(url) {
     case Api.AUTH: return `Не удалось авторизироваться`;
     case Api.TOKEN_VERIFY: return `Проверка токена не прошла`;
     case Api.REFRESH_TOKEN: return 'Не удалось заменить токен';
+
     case Api.GET_All_USERS: return 'Не удалось получить пользователей';
     case Api.CREATE_USER: return 'Не удалось создать ползователя';
     case Api.UPDATE_USER: return 'Не удалось обновить ползователя';
     case Api.DELETE_USER: return 'Не удалось удалить ползователя';
+
     case Api.GET_ALL_TASKS: return 'Не удалось получить все задачи';
+    case Api.GET_TASK_DETAILS: return 'Не удалось получить детали таска'
     default: return 'Неизвестная ошибка';
   }
 }

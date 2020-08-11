@@ -35,8 +35,6 @@
                     :title="enterTask.title"
             ></draggable_area>
         </div>
-
-        <task_dialog></task_dialog>
     </div>
 </template>
 
@@ -44,7 +42,6 @@
     import draggable_area from "../../components/draggableArea/draggable_tasks";
     import draggable from 'vuedraggable'
     import windowSize from '../../mixins/windowSize'
-    import task_dialog from '../../components/dialogs/task_dialog'
 
     const message = [
         "vue.draggable",
@@ -70,7 +67,6 @@
         components: {
             draggable,
             draggable_area,
-            task_dialog
         },
         mixins: [windowSize],
         mounted() {

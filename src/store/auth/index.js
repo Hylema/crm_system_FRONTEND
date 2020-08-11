@@ -29,8 +29,6 @@ const actions = {
         commit('logout');
     },
     async tokenVerify({ commit, dispatch }) {
-        console.log(state.token, 'state.token')
-        console.log(state.refresh, 'state.refresh')
         return await Vue.axios.post(Api.TOKEN_VERIFY, {
             token: state.token
         }).then(response => {
@@ -42,8 +40,6 @@ const actions = {
         })
     },
     async getTokenByRefresh({ commit, dispatch }) {
-        console.log(state.token, 'state.token')
-        console.log(state.refresh, 'state.refresh')
         return await Vue.axios.post(Api.REFRESH_TOKEN, {
             refresh: state.refresh
         }).then(response => {
