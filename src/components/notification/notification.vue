@@ -20,7 +20,7 @@
                         </v-card-title>
 
                         <v-card-title>
-                            <v-btn class="mx-2" fab dark small color="action" @click="props.close"><v-icon>close</v-icon></v-btn>
+                            <v-btn class="mx-2" fab dark small color="action" @click.stop="props.close"><v-icon>close</v-icon></v-btn>
                         </v-card-title>
                     </v-layout>
 

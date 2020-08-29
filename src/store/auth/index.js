@@ -1,54 +1,52 @@
 import Vue from 'vue'
-import { Api } from '../../constants'
+import { Api } from '@/constants'
 
 const state = {
     token: localStorage.getItem('access_token') || null,
     refresh: localStorage.getItem('refresh_token') || null,
+    user: localStorage.getItem('user') || null,
+    isAdmin: localStorage.getItem('admin') || false,
 };
 
 const actions = {
     async login ({ commit, dispatch }, params){
-        return await Vue.axios.post(Api.AUTH, params).then(response => {
+        return await Vue.axios.post(Api.AUTHORIZATION.AUTH, params).then(response => {
             console.log(response, 'response1')
+            dispatch('getCurrentAuthUser')
             commit('login', response);
             commit('setToken');
         })
     },
-    logout({ commit }){
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-
-        // Vue.notify({
-        //     group: 'Api',
-        //     title: `${response.status}`,
-        //     text: 'Вы успешно вышли',
-        //     type: 'success',
-        //     duration: 1000000
-        // });
-
-        commit('logout');
-    },
     async tokenVerify({ commit, dispatch }) {
-        return await Vue.axios.post(Api.TOKEN_VERIFY, {
+        return await Vue.axios.post(Api.AUTHORIZATION.TOKEN_VERIFY, {
             token: state.token
         }).then(response => {
             commit('setToken');
-
             return true;
         }).catch(error => {
             return false;
         })
     },
     async getTokenByRefresh({ commit, dispatch }) {
-        return await Vue.axios.post(Api.REFRESH_TOKEN, {
+        return await Vue.axios.post(Api.AUTHORIZATION.REFRESH_TOKEN, {
             refresh: state.refresh
         }).then(response => {
+            dispatch('getCurrentAuthUser')
             commit('login', response);
             commit('setToken');
-
             return true;
         }).catch(error => {
              commit('logout');
+
+            return false
+        })
+    },
+    async getCurrentAuthUser({ commit, dispatch }) {
+        return await Vue.axios.get(Api.AUTHORIZATION.USER).then(response => {
+            commit('setUser', response.data);
+            return true;
+        }).catch(error => {
+            // commit('logout');
 
             return false
         })
@@ -57,8 +55,8 @@ const actions = {
 
 const mutations = {
     login(state, response){
-        let access = response.data.access
-        let refresh = response.data.refresh
+        let access = response.data.access_token
+        let refresh = response.data.refresh_token
 
         localStorage.setItem('access_token', access)
         localStorage.setItem('refresh_token', refresh)
@@ -69,15 +67,53 @@ const mutations = {
     logout(state){
         state.token = null;
         state.refresh = null;
+
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        localStorage.removeItem('user')
+        localStorage.removeItem('admin')
     },
     setToken(state){
         Vue.axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
-    }
+    },
+    setUser(state, user){
+        console.log('user', user)
+        localStorage.setItem('user', JSON.stringify(user))
+        state.user = user
+
+        Vue.set(state.user, user)
+
+        if(user.roles != null){
+            const roles = user.roles
+
+            roles.forEach((role) => {
+                if(role.role === 'ROLE_ADMIN'){
+                    localStorage.setItem('admin', true)
+
+                    state.isAdmin = true
+                }
+            })
+        }
+    },
 };
 
 const getters = {
-    loggedIn(){
-        return state.token;
+    loggedIn: state => state.token,
+    getCurrentUser: state => {
+        if(state.user != null) {
+            try {
+                return JSON.parse(state.user)
+            } catch (e) {
+                return state.user
+            }
+        }
+
+        return null
+    },
+    currentUserIsAdmin: state => {
+        console.log(state.isAdmin)
+
+        return state.isAdmin
     }
 };
 

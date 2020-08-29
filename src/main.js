@@ -3,125 +3,100 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import plugins from './plugins'
-import backToTop from './components/backButton/back_button'
-import { Api } from './constants'
-
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
+import { BackendUrl } from "@/constants";
 Vue.config.productionTip = false
 
-Vue.component('back-to-top', backToTop)
-
-Vue.axios.defaults.baseURL = 'http://193.176.79.41';
-
-// let performed = true
-//
-// Vue.axios.interceptors.request.use(async function (config) {
-//   if(!config.headers['Authorization']){
-//     if(!performed){
-//       performed = true
-//
-//       await store.dispatch('auth/tokenVerify').then(async res => {
-//         if(!res) await store.dispatch('auth/getTokenByRefresh').then(res => {
-//           return config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
-//         })
-//         else return config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
-//       })
-//     }
-//   }
-//
-//   return config;
-// },  (error) => {
-//
-//   return Promise.reject(error);
-// });
-
-Vue.filter('capitalize', function (value) {
-  if (!value) return ''
-  value = value.toString()
-  return value.charAt(0).toUpperCase() + value.slice(1)
-})
-
-Vue.filter('reverse', function(value) {
-  return value.slice().reverse();
-});
-
-Vue.axios.interceptors.response.use(function (response) {
-
-  Vue.notify({
-    group: 'Api',
-    title: `${response.status}`,
-    data: response,
-    text: getSuccessTitle(response.config.url),
-    type: 'success',
-    duration: 1000000
-  });
-
-  return response;
-}, async (error) => {
-
-  Vue.notify({
-    group: 'Api',
-    title: `${error.response.status}`,
-    data: error.response,
-    text: getErrorTitle(error.response.config.url),
-    type: 'error',
-    duration: 1000000
-  });
-
-//&& error.response.config.url !== Api.AUTH && error.response.config.url !== Api.TOKEN_VERIFY
-  if(error.response.status === 401 && error.response.config.url !== Api.TOKEN_VERIFY){
-    return await store.dispatch('auth/tokenVerify').then(async tokenVerifyIsValid => {
-      if(!tokenVerifyIsValid) return await store.dispatch('auth/getTokenByRefresh').then(async refreshTokenSuccess => {
-        if(refreshTokenSuccess) {
-          error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
-          return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
-        }
-      })
-      else {
-        if(!error.response.config.headers['Authorization']){
-          error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
-          return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
-        }
-      }
-    })
-
-    //return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
-  } else {
-    return Promise.reject(error);
-  }
-});
-
-function  getSuccessTitle(url) {
-  switch (url) {
-    case Api.AUTH: return 'Авторизация прошла успешно';
-    case Api.TOKEN_VERIFY: return 'Проверка токена прошла успешно';
-    case Api.REFRESH_TOKEN: return 'Замена токена прошел успешно';
-
-    case Api.GET_All_USERS: return 'Пользователи успешно получены';
-    case Api.CREATE_USER: return 'Пользователь успешно создан';
-    case Api.UPDATE_USER: return 'Пользователь успешно обновлен';
-    case Api.DELETE_USER: return 'Пользователь успешно удален';
-
-    case Api.GET_ALL_TASKS: return 'Все задачи успешно получены';
-    case Api.GET_TASK_DETAILS: return 'Детали такска успешно получены'
-    default: return 'Неизвестное успешное действие';
-  }
+if(store.getters["auth/loggedIn"] === null){
+  store.dispatch("auth/getCurrentAuthUser").then(() => stompConnect())
+} else {
+  stompConnect()
 }
 
-function  getErrorTitle(url) {
-  switch (url) {
-    case Api.AUTH: return `Не удалось авторизироваться`;
-    case Api.TOKEN_VERIFY: return `Проверка токена не прошла`;
-    case Api.REFRESH_TOKEN: return 'Не удалось заменить токен';
+function stompConnect(){
+  const stomp = Stomp.over(() => new SockJS(`${BackendUrl}/aegis_crm_system`))
+  Vue.prototype.$stomp = stomp;
 
-    case Api.GET_All_USERS: return 'Не удалось получить пользователей';
-    case Api.CREATE_USER: return 'Не удалось создать ползователя';
-    case Api.UPDATE_USER: return 'Не удалось обновить ползователя';
-    case Api.DELETE_USER: return 'Не удалось удалить ползователя';
+  stomp.connect({"Authorization": store.getters["auth/loggedIn"]}, frame => {
+    store.commit("tasks/loadingTasks", true)
 
-    case Api.GET_ALL_TASKS: return 'Не удалось получить все задачи';
-    case Api.GET_TASK_DETAILS: return 'Не удалось получить детали таска'
-    default: return 'Неизвестная ошибка';
-  }
+    console.log('connected success')
+
+    stomp.subscribe('/user/getAll', response => {
+      console.log(JSON.parse(response.body))
+      store.commit("admin/setUsers", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/user/update', response => {
+      store.commit("admin/updateUser", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/user/create', response => {
+      store.commit("admin/createUser", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/user/delete', response => {
+      store.commit("admin/deleteUser", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/status/getAll', response => {
+      store.commit("tasks/setStatus", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/getAll', response => {
+      store.commit("tasks/loadingTasks", false)
+      store.commit("tasks/setTasks", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/getOne', response => {
+      store.commit("tasks/loadingDetails", false)
+      store.commit("tasks/taskDetails", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/create', response => {
+      store.commit("tasks/loadingActionTask", false)
+      store.commit("tasks/createTask", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/update', response => {
+      store.commit("tasks/updateTask", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/patch', response => {
+      store.commit("tasks/updateTask", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/delete', response => {
+      store.commit("tasks/deleteTask", JSON.parse(response.body))
+    })
+
+    stomp.subscribe('/task/makeComment', response => {
+      store.commit("tasks/makeComment", JSON.parse(response.body))
+    })
+
+    stomp.send("/app/getAllUser")
+    stomp.send("/app/getAllTask")
+    stomp.send("/app/getAllStatus")
+
+  }, error => {
+    if(error.headers.message ==="401"){
+      store.commit("tasks/loadingTasks", true)
+
+      store.dispatch("admin/getAllUsers")
+
+      Vue.notify({
+        group: 'Api',
+        title: `${error.headers.message}`,
+        data: {},
+        text: 'WebSocket, токен устарел',
+        type: 'error',
+        duration: 1000000
+      });
+
+      setTimeout(stompConnect, 5000);
+    }
+  })
 }
 
 new Vue({

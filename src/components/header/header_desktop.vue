@@ -33,8 +33,6 @@
 
         <div class="flex-grow-1"></div>
 
-        <account_information></account_information>
-
 <!--        <template v-slot:extension v-if="currentTab.length > 0 && window.width > 1265">-->
 <!--&lt;!&ndash;            <v-layout>&ndash;&gt;-->
 <!--&lt;!&ndash;                <v-tabs&ndash;&gt;-->
@@ -70,14 +68,9 @@
 
 <script>
     import windowSize from '../../mixins/windowSize'
-    import account_information from './account_information'
-    import Vue from "vue";
     export default {
         name: "Header_desktop",
         props: {},
-        components: {
-            account_information
-        },
         mixins: [windowSize],
         data() {
             return {}

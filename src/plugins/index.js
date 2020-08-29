@@ -4,6 +4,8 @@ import notification from '../plugins/notification';
 import bootstrap from '../plugins/bootstrap';
 import scroll_bar from '../plugins/scroll_bar';
 import axios from '../plugins/axios';
+import filters from '../plugins/filters';
+import globalComponent from '../plugins/globalComponent';
 
 export default {
     vuetify,
@@ -11,5 +13,7 @@ export default {
     notification,
     bootstrap,
     scroll_bar,
-    axios
+    axios,
+    filters,
+    globalComponent
 }

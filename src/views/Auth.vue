@@ -78,13 +78,7 @@
     </v-container>
 </template>
 <script>
-    import { theme } from '../constants'
     export default {
-        // mounted() {
-        //     this.axios
-        //         .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-        //         .then(response => (console.log(response)));
-        // },
         data: () => ({
             valid: false,
             show: false,
@@ -92,7 +86,7 @@
             password: null,
             passwordRules: [
                 v => !!v || 'Поле с паролем не должно быть пустым',
-                v => (v && v.length >= 6) || 'Пароль слишком короткий',
+                v => (v && v.length >= 3) || 'Пароль слишком короткий',
             ],
             email: null,
             emailRules: [
@@ -100,12 +94,8 @@
                 v => /.+@.+\..+/.test(v) || 'E-mail не верный',
             ],
             title: {
-                // color: theme.textTitle,
                 padding: '40px'
             },
-            preRegister: {
-                // color: theme.text
-            }
         }),
         computed: {
             vTextFieldEmail: vm => ({
@@ -126,11 +116,9 @@
             vProgressLinear: vm => ({
                 absolute: true,
                 top: true,
-                // color: theme.actions,
                 height: 7
             }),
             vCard: vm => ({
-                // color: theme.background,
                 //width: 500,
             }),
         },

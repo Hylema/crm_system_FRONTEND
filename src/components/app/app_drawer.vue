@@ -33,17 +33,7 @@
 
 
 
-
-        <v-list-item class="px-2">
-            <v-list-item-avatar>
-                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-title>John Leider</v-list-item-title>
-        </v-list-item>
-
-
-
+      <account_information></account_information>
 
 
         <v-list style="padding: 0" v-if="window.width < 1262">
@@ -81,7 +71,7 @@
         </v-list>
 
         <v-list style="padding: 0" v-else>
-            <v-list-item link :to="tab.route" color="action" v-for="tab in tabs">
+            <v-list-item link :to="tab.route" color="action" v-for="tab in tabs" v-if="tab.name !== 'Admin' || currentUserIsAdmin">
                 <v-list-item-action>
                     <v-icon>{{ tab.icon }}</v-icon>
                 </v-list-item-action>
@@ -120,15 +110,20 @@
 
 <script>
     import windowSize from '../../mixins/windowSize'
+    import account_information from "@/components/header/account_information";
     export default {
-        name: "app_drawer",
-        mixins: [windowSize],
+      name: "app_drawer",
+      mixins: [windowSize],
+      components: {
+        account_information
+      },
         data(){
           return {
               mini_variant: false,
           }
         },
         computed: {
+          currentUserIsAdmin: vm => vm.$store.getters["auth/currentUserIsAdmin"],
             drawer: {
                 get(){
                     return this.$store.getters['header/drawer'];

@@ -20,13 +20,13 @@ const state = {
       name: 'Tasks',
       children: [
         {
-          title: 'Мои задачи',
+          title: 'Название',
           name: 'MyTasks',
           icon: 'mdi-clipboard-list-outline',
           route: '',
         },
         {
-          title: 'Поручил',
+          title: 'Таблица',
           name: 'Instructed',
           icon: 'mdi-clipboard-list-outline',
           route: 'instructed',
@@ -34,14 +34,10 @@ const state = {
       ]
     },
     {
-      title: 'Настройки',
-      icon: 'mdi-cog',
-      route: '/settings'
-    },
-    {
       title: 'Администрирование',
       icon: 'mdi-monitor',
       route: '/admin',
+      name: 'Admin',
       children: [
         {
           title: 'Пользователи',

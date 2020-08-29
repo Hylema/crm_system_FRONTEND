@@ -2,22 +2,31 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
-import Error from '../views/errors/NotFound'
+import NotFound from '../views/errors/NotFound'
+import PermissionDenied from '../views/errors/AccessDenied'
 import Tasks from '../views/tasks/Tasks'
 import MyTask from '../views/tasks/MyTask'
 import Administration from '../views/admin/Administration'
-import InstructedTask from '../views/tasks/InstructedTask'
+import InstructedTask from '../views/tasks/TableTask'
 import CRUD_Users from '../views/admin/CRUD_Users'
 import store from '../store'
-import { RouteNames } from '../constants'
+import { RouteNames } from '@/constants'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '*',
-    name: 'Error',
-    component: Error,
+    name: 'NotFound',
+    component: NotFound,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/permissionDenied',
+    name: 'PermissionDenied',
+    component: PermissionDenied,
     meta: {
       requiresAuth: true
     }
@@ -81,7 +90,8 @@ const routes = [
     name: 'admin',
     component: Administration,
     meta: {
-      requiresVisitor: true
+      requiresAuth: true,
+      requiresAdmin: true
     },
     children: [
       {
@@ -89,7 +99,8 @@ const routes = [
         name: 'users',
         component: CRUD_Users,
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          requiresAdmin: true
         },
       },
     ],
@@ -111,14 +122,22 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    if (!store.getters["auth/loggedIn"]) {
-      next({
-        path: '/auth',
-      })
+    if(to.matched.some(record => record.meta.requiresAdmin)){
+      if (store.getters["auth/loggedIn"] && store.getters["auth/currentUserIsAdmin"]) {
+        next()
+      } else {
+        next({
+          path: '/permissionDenied',
+        })
+      }
     } else {
-      next()
+      if (!store.getters["auth/loggedIn"]) {
+        next({
+          path: '/auth',
+        })
+      } else {
+        next()
+      }
     }
   } else if (to.matched.some(record => record.meta.requiresVisitor)) {
     if (store.getters["auth/loggedIn"]) {
@@ -128,6 +147,8 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
+  } else if (to.matched.some(record => record.meta.requiresAuth) && to.matched.some(record => record.meta.requiresAdmin)) {
+
   } else {
     next() // make sure to always call next()!
   }

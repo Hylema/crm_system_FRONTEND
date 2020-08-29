@@ -32,20 +32,30 @@ export const RouteNames = {
   TASKS: 'Tasks',
 };
 // 'http://193.176.79.41/auth/token/'
-const HOST = "http://193.176.79.41/"
+
+// export const BackendUrl = 'http://localhost:9090'
+export const BackendUrl = 'https://crm-system-aegis-backend.herokuapp.com'
 
 export const Api = {
-  AUTH: "auth/user/login/",
-  TOKEN_VERIFY: '/auth/user/token/verify/',
-  REFRESH_TOKEN: '/auth/user/token/refresh/',
+  AUTHORIZATION: {
+    AUTH: "/api/v1/auth/login/",
+    TOKEN_VERIFY: '/api/v1/auth/verify/',
+    REFRESH_TOKEN: '/api/v1/auth/refresh/',
+    USER: '/api/v1/auth/user',
+  },
 
-  GET_All_USERS: '/auth/user/list',
-  CREATE_USER: '/auth/user/create/',
-  UPDATE_USER: '/auth/user/change/',
-  DELETE_USER: '/auth/user/change/',
+  USERS: {
+    GET_All_USERS: '/api/v1/users/',
+    CREATE_USER: '/api/v1/admin/user/create/',
+    UPDATE_USER: '/api/v1/admin/user/',
+    PATCH_USER: '/api/v1/admin/user/',
+    DELETE_USER: '/api/v1/admin/user/',
+  },
 
-  GET_ALL_TASKS: '/tasks/alltasks/',
-  GET_TASK_DETAILS: '/tasks/detail',
-  MAKE_TASK_COMMENT: '/tasks/comments/',
-  CREATE_TASK: '/tasks/maketask/'
+  TASKS: {
+    GET_ALL_TASKS: '/api/v1/tasks',
+    GET_TASK_DETAILS: '/tasks/detail',
+    MAKE_TASK_COMMENT: '/tasks/comments/',
+    CREATE_TASK: '/tasks/maketask/'
+  }
 };

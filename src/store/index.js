@@ -7,6 +7,7 @@ import theme from './theme'
 import tasks from './tasks'
 import admin from './admin'
 import notification from './notification'
+import users from './users'
 
 Vue.use(Vuex);
 
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     theme,
     tasks,
     admin,
-    notification
+    notification,
+    users
   },
   strict: false
 })

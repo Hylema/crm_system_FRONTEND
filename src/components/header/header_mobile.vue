@@ -14,8 +14,6 @@
             <v-toolbar-title dark>{{ currentPageTitle }}</v-toolbar-title>
 
             <v-spacer></v-spacer>
-
-            <account_information></account_information>
         </v-app-bar>
 
 <!--        <drawer_mobile :tabs="tabs" ></drawer_mobile>-->
@@ -23,14 +21,10 @@
 </template>
 
 <script>
-    import account_information from './account_information'
     export default {
         name: "header_mobile",
         props: {
             tabs: Array,
-        },
-        components: {
-            account_information
         },
         data() {
             return {
