@@ -4,17 +4,18 @@ import { Api } from '@/constants'
 const state = {
     token: localStorage.getItem('access_token') || null,
     refresh: localStorage.getItem('refresh_token') || null,
-    user: localStorage.getItem('user') || null,
-    isAdmin: localStorage.getItem('admin') || false,
 };
 
 const actions = {
     async login ({ commit, dispatch }, params){
         return await Vue.axios.post(Api.AUTHORIZATION.AUTH, params).then(response => {
-            console.log(response, 'response1')
             dispatch('getCurrentAuthUser')
             commit('login', response);
             commit('setToken');
+
+            return response
+        }).catch(error => {
+            throw error.response.data
         })
     },
     async tokenVerify({ commit, dispatch }) {
@@ -43,7 +44,9 @@ const actions = {
     },
     async getCurrentAuthUser({ commit, dispatch }) {
         return await Vue.axios.get(Api.AUTHORIZATION.USER).then(response => {
-            commit('setUser', response.data);
+            commit('user/setUser', response.data, {
+                root: true
+            });
             return true;
         }).catch(error => {
             // commit('logout');
@@ -76,45 +79,46 @@ const mutations = {
     setToken(state){
         Vue.axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
     },
-    setUser(state, user){
-        console.log('user', user)
-        localStorage.setItem('user', JSON.stringify(user))
-        state.user = user
-
-        Vue.set(state.user, user)
-
-        if(user.roles != null){
-            const roles = user.roles
-
-            roles.forEach((role) => {
-                if(role.role === 'ROLE_ADMIN'){
-                    localStorage.setItem('admin', true)
-
-                    state.isAdmin = true
-                }
-            })
-        }
-    },
+    // setUser(state, user){
+    //     console.log('user', user)
+    //     localStorage.setItem('user', JSON.stringify(user))
+    //     state.user = user
+    //
+    //     Vue.set(state.user, user)
+    //
+    //     if(user.roles != null){
+    //         const roles = user.roles
+    //
+    //         roles.forEach((role) => {
+    //             if(role.role === 'ROLE_ADMIN'){
+    //                 localStorage.setItem('admin', true)
+    //
+    //                 state.isAdmin = true
+    //             }
+    //         })
+    //     }
+    // },
 };
 
 const getters = {
-    loggedIn: state => state.token,
-    getCurrentUser: state => {
-        if(state.user != null) {
-            try {
-                return JSON.parse(state.user)
-            } catch (e) {
-                return state.user
-            }
-        }
-
-        return null
-    },
-    currentUserIsAdmin: state => {
-        console.log(state.isAdmin)
-
-        return state.isAdmin
-    }
+    token: state => state.token,
+    refresh: state => state.refresh,
+    // getCurrentUser: state => {
+    //     if(state.user != null) {
+    //         try {
+    //             return JSON.parse(state.user)
+    //         } catch (e) {
+    //             return state.user
+    //         }
+    //     }
+    //
+    //     return null
+    // },
+    // currentUserIsAdmin: state => {
+    //     console.log(state.isAdmin)
+    //
+    //     return state.isAdmin
+    // }
 };
 
 export default {

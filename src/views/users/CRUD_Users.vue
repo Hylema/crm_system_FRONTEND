@@ -5,7 +5,7 @@
       :headers="headers"
       :items="users"
       page-text="page-text"
-      class="elevation-1"
+      class="elevation-1 tableColor"
       :loading="loadingTable"
   >
     <template v-slot:item.firstName="{ item }">
@@ -192,7 +192,7 @@ export default {
   }),
 
   computed: {
-    users: vm => vm.$store.getters['admin/users'],
+    users: vm => vm.$store.getters['users/users'],
     vProgressLinear: vm => ({
       absolute: true,
       top: true,

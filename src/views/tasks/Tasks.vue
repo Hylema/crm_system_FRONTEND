@@ -4,16 +4,14 @@
       <router-view></router-view>
     </keep-alive>
 
-    <task_dialog></task_dialog>
+    <create-update-task></create-update-task>
   </div>
 </template>
 
 <script>
 import store from "../../store";
-import task_dialog from '../../components/dialogs/task_dialog'
 export default {
   name: "Tasks",
-  components: {task_dialog},
   beforeRouteEnter (to, from, next) {
     next()
   },

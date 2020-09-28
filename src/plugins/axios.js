@@ -18,7 +18,7 @@ Vue.axios.interceptors.response.use(function (response) {
             data: response,
             text: getSuccessTitle(response.config.url),
             type: 'success',
-            duration: 1000000
+            duration: 10000
         });
     }
 
@@ -33,7 +33,7 @@ Vue.axios.interceptors.response.use(function (response) {
             data: error.response,
             text: getErrorTitle(error.response.config.url),
             type: 'error',
-            duration: 1000000
+            duration: 10000
         });
     }
 
@@ -42,13 +42,13 @@ Vue.axios.interceptors.response.use(function (response) {
         return await store.dispatch('auth/tokenVerify').then(async tokenVerifyIsValid => {
             if(!tokenVerifyIsValid) return await store.dispatch('auth/getTokenByRefresh').then(async refreshTokenSuccess => {
                 if(refreshTokenSuccess) {
-                    error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+                    error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/token']}`
                     return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
                 }
             })
             else {
                 if(!error.response.config.headers['Authorization']){
-                    error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/loggedIn']}`
+                    error.response.config.headers['Authorization'] = `Bearer ${store.getters['auth/token']}`
                     return await Vue.axios.request(error.response.config).then(response => Promise.resolve(response)).catch(error => Promise.reject(error))
                 }
             }

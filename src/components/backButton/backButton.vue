@@ -9,7 +9,7 @@
 <script>
     import BackToTop from 'vue-backtotop'
     export default {
-        name: "back_button",
+        name: "backButton",
         components: {
             BackToTop
         },

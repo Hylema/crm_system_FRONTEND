@@ -11,7 +11,9 @@ export default new Vuetify({
                 background: '#edeef0',
                 background_lighter: '#FFFFFF',
                 action: '#4a76a8',
-                text: '#000000'
+                text: '#000000',
+                activeAction: '#809fc2',
+                tableColor: '#ffffff',
             },
             dark: {
                 primary: '#1976D2',
@@ -21,8 +23,11 @@ export default new Vuetify({
                 info: '#2196F3',
                 success: '#4CAF50',
                 warning: '#FFC107',
-                action: '#7289da',
-                background: '#36393f',
+
+                tableColor: '#282d47',
+                activeAction: '#6b79aa',
+                action: '#3e455f',
+                background: '#1a1d2c',
                 background_to: '#33333f',
                 text: '#b9bbbe',
             },

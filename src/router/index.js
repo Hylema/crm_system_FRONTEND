@@ -5,10 +5,11 @@ import Auth from '../views/Auth.vue'
 import NotFound from '../views/errors/NotFound'
 import PermissionDenied from '../views/errors/AccessDenied'
 import Tasks from '../views/tasks/Tasks'
-import MyTask from '../views/tasks/MyTask'
+import CanbanTask from '../views/tasks/CanbanTask'
 import Administration from '../views/admin/Administration'
-import InstructedTask from '../views/tasks/TableTask'
-import CRUD_Users from '../views/admin/CRUD_Users'
+import TableTask from '../views/tasks/TableTask'
+import TaskDetails from '../views/tasks/TaskDetails'
+import CRUD_Users from '../views/users/CRUD_Users'
 import store from '../store'
 import { RouteNames } from '@/constants'
 
@@ -49,20 +50,28 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'MyTasks',
-        component: MyTask,
+        name: 'CanbanTask',
+        component: CanbanTask,
         meta: {
           requiresAuth: true
         },
       },
       {
-        path: 'instructed',
-        name: 'Instructed',
-        component: InstructedTask,
+        path: 'table',
+        name: 'TableTask',
+        component: TableTask,
         meta: {
           requiresAuth: true
         },
       },
+      {
+        path: '/tasks/:id',
+        name: 'TaskDetails',
+        component: TaskDetails,
+        meta: {
+          requiresAuth: true
+        },
+      }
     ],
     // beforeEnter: (to, from, next) => {
     //   console.log('33333333333333333333333333')
@@ -86,7 +95,7 @@ const routes = [
     // }
   },
   {
-    path: '/admin',
+    path: '/users',
     name: 'admin',
     component: Administration,
     meta: {
@@ -123,7 +132,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if(to.matched.some(record => record.meta.requiresAdmin)){
-      if (store.getters["auth/loggedIn"] && store.getters["auth/currentUserIsAdmin"]) {
+      if (store.getters["auth/token"] && store.getters["user/currentUserIsAdmin"]) {
         next()
       } else {
         next({
@@ -131,7 +140,7 @@ router.beforeEach((to, from, next) => {
         })
       }
     } else {
-      if (!store.getters["auth/loggedIn"]) {
+      if (!store.getters["auth/token"]) {
         next({
           path: '/auth',
         })
@@ -140,7 +149,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else if (to.matched.some(record => record.meta.requiresVisitor)) {
-    if (store.getters["auth/loggedIn"]) {
+    if (store.getters["auth/token"]) {
       next({
         path: '/',
       })

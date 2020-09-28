@@ -4,40 +4,27 @@
       v-model="menu"
       absolute
       close-on-click
-      v-if="currentAuthUser != null"
+      v-if="currentAuthUser != null || currentAuthUser !== undefined || currentAuthUser !== ''"
   >
     <template v-slot:activator="{ on: menu, attrs }">
       <v-tooltip bottom open-delay="500">
         <template v-slot:activator="{ on: tooltip }">
-          <v-list-item class="px-2" v-on="{ ...tooltip, ...menu }">
-            <v-list-item-avatar>
-              <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-title>{{`${currentAuthUser.firstName} ${currentAuthUser.lastName}`}}</v-list-item-title>
+          <v-list-item class="px-1" v-on="{ ...tooltip, ...menu }" dark>
+            <user-avatar :user="currentAuthUser"></user-avatar>
+            <v-list-item-title> {{`${currentAuthUser.firstName} ${currentAuthUser.lastName}`}}</v-list-item-title>
           </v-list-item>
         </template>
         <span>Ваш аккаунт</span>
       </v-tooltip>
     </template>
+    <v-file-input hide-input style="margin: 0 !important; padding: 0 !important; display: none" @change="changeAvatar" id="fileInput"></v-file-input>
     <v-card width="300" class="background">
       <v-list>
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{`${currentAuthUser.firstName} ${currentAuthUser.lastName}`}}</v-list-item-title>
-            <v-list-item-subtitle>{{ currentAuthUser.email }}</v-list-item-subtitle>
-          </v-list-item-content>
+        <v-list-item @click="fileEvent()">
           <v-list-item-action>
-            <v-btn
-                icon
-                @click="menu = false"
-            >
-              <v-icon>mdi-close-circle</v-icon>
-            </v-btn>
+            <v-icon>mdi-account-circle</v-icon>
           </v-list-item-action>
+          <v-list-item-subtitle>Изменить аватарку</v-list-item-subtitle>
         </v-list-item>
       </v-list>
       <v-list>
@@ -62,7 +49,7 @@
 
 <script>
 export default {
-  name: "account_information",
+  name: "accountInformation",
   data(){
     return {
       menu: false
@@ -87,9 +74,15 @@ export default {
 
       return JSON.parse(jsonPayload);
     },
+    changeAvatar(file){
+      this.$store.dispatch('user/changeAvatar', file)
+    },
+    fileEvent(){
+      document.getElementById("fileInput").click()
+    }
   },
   computed: {
-    currentAuthUser: vm => vm.$store.getters["auth/getCurrentUser"]
+    currentAuthUser: vm => vm.$store.getters["user/currentUser"]
   }
 }
 </script>

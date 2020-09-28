@@ -5,9 +5,12 @@ import ui from './ui'
 import auth from './auth'
 import theme from './theme'
 import tasks from './tasks'
-import admin from './admin'
 import notification from './notification'
 import users from './users'
+import files from './files'
+import user from './user'
+import loading from './loading'
+import ws from './ws'
 
 Vue.use(Vuex);
 
@@ -18,9 +21,12 @@ export default new Vuex.Store({
     auth,
     theme,
     tasks,
-    admin,
     notification,
-    users
+    users,
+    files,
+    user,
+    loading,
+    ws,
   },
   strict: false
 })

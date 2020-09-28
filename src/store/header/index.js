@@ -20,14 +20,16 @@ const state = {
       name: 'Tasks',
       children: [
         {
-          title: 'Название',
-          name: 'MyTasks',
+          title: 'Канбан',
+          path: 'canban',
+          name: 'CanbanTask',
           icon: 'mdi-clipboard-list-outline',
           route: '',
         },
         {
           title: 'Таблица',
-          name: 'Instructed',
+          path: 'table',
+          name: 'TableTask',
           icon: 'mdi-clipboard-list-outline',
           route: 'instructed',
         },
@@ -36,7 +38,7 @@ const state = {
     {
       title: 'Администрирование',
       icon: 'mdi-monitor',
-      route: '/admin',
+      route: '/users',
       name: 'Admin',
       children: [
         {

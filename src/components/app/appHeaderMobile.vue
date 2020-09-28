@@ -22,7 +22,7 @@
 
 <script>
     export default {
-        name: "header_mobile",
+        name: "appHeaderMobile",
         props: {
             tabs: Array,
         },

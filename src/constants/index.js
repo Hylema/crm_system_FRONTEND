@@ -46,10 +46,14 @@ export const Api = {
 
   USERS: {
     GET_All_USERS: '/api/v1/users/',
-    CREATE_USER: '/api/v1/admin/user/create/',
-    UPDATE_USER: '/api/v1/admin/user/',
-    PATCH_USER: '/api/v1/admin/user/',
-    DELETE_USER: '/api/v1/admin/user/',
+    CREATE_USER: '/api/v1/users/user/create/',
+    UPDATE_USER: '/api/v1/users/user/',
+    PATCH_USER: '/api/v1/users/user/',
+    DELETE_USER: '/api/v1/users/user/',
+  },
+
+  USER: {
+    CHANGE_AVATAR: '/api/v1/user/avatar',
   },
 
   TASKS: {
@@ -57,5 +61,11 @@ export const Api = {
     GET_TASK_DETAILS: '/tasks/detail',
     MAKE_TASK_COMMENT: '/tasks/comments/',
     CREATE_TASK: '/tasks/maketask/'
+  },
+
+  FILES: {
+    UPLOAD: '/api/v1/files/upload',
+    UPLOADS: '/api/v1/files/uploads',
+    DOWNLOAD: '/api/v1/files/download',
   }
 };

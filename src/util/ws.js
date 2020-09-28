@@ -14,23 +14,23 @@ console.log(store)
 //     stomp.send("/app/getAllUser")
 //
 //     stomp.subscribe('/user/getAll', response => {
-//         store.commit("admin/setUsers", JSON.parse(response.body))
+//         store.commit("users/setUsers", JSON.parse(response.body))
 //     })
 //
 //     stomp.subscribe('/user/update', response => {
-//         store.commit("admin/updateUser", JSON.parse(response.body))
+//         store.commit("users/updateUser", JSON.parse(response.body))
 //     })
 //
 //     stomp.subscribe('/user/create', response => {
-//         store.commit("admin/createUser", JSON.parse(response.body))
+//         store.commit("users/createUser", JSON.parse(response.body))
 //     })
 //
 //     stomp.subscribe('/user/delete', response => {
-//         store.commit("admin/deleteUser", JSON.parse(response.body))
+//         store.commit("users/deleteUser", JSON.parse(response.body))
 //     })
 // }, error => {
 //     console.log("===============================================", error.headers.message)
 //     if(error.headers.message ==="401"){
-//         store.dispatch("admin/getAllUsers")
+//         store.dispatch("users/getAllUsers")
 //     }
 // })

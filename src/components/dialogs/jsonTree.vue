@@ -12,7 +12,7 @@
 <script>
     import JsonViewer from 'vue-json-viewer'
     export default {
-        name: "json_tree",
+        name: "jsonTree",
         components: {
             JsonViewer
         },

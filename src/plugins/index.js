@@ -6,6 +6,7 @@ import scroll_bar from '../plugins/scroll_bar';
 import axios from '../plugins/axios';
 import filters from '../plugins/filters';
 import globalComponent from '../plugins/globalComponent';
+import ws from '../plugins/ws';
 
 export default {
     vuetify,
@@ -15,5 +16,6 @@ export default {
     scroll_bar,
     axios,
     filters,
-    globalComponent
+    globalComponent,
+    ws
 }

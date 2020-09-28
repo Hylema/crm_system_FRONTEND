@@ -14,9 +14,9 @@ export default function dateFilter (formDate) {
         currentDateHours = currentDate.getHours(),
         currentDateMinutes = addZero(currentDate.getUTCMinutes())
 
-    console.log(currentDate, 'currentDate')
-    console.log(date, 'taskDate')
-    console.log(date.getHours(), 'date.getUTCHours()')
+    // console.log(currentDate, 'currentDate')
+    // console.log(date, 'taskDate')
+    // console.log(date.getHours(), 'date.getUTCHours()')
 
     let dateTitle,
         timeTitle,
@@ -41,8 +41,8 @@ export default function dateFilter (formDate) {
             }
 
         } else if(currentDateHours - dateHours <= 6){
-            console.log(currentDateHours, 'currentDateHours')
-            console.log(dateHours, 'dateHours')
+            // console.log(currentDateHours, 'currentDateHours')
+            // console.log(dateHours, 'dateHours')
             switch (currentDateHours - dateHours){
                 case 1: resultDate = 'час назад'; break;
                 case 2: resultDate = '2 часа назад'; break;
