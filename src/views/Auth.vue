@@ -193,7 +193,7 @@ export default {
         }
       }).catch(error => {
         if(error.message.charAt(0) === 'E') this.emailErrorMessage = error.message
-        else this.passwordErrorMessage = error.message
+        else if(error.message.charAt(0) === 'P') this.passwordErrorMessage = error.message
 
         console.log(error, 'error')
         this.loading = false;
