@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
     "@stomp/stompjs": "^5.4.4",
     "axios": "^0.19.2",
